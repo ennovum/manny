@@ -4,11 +4,7 @@ import request from "request";
 const API_URL_FUND_HISTORY = "http://www.money.pl/fundusze/archiwum/fundusze/";
 
 class MoneyplApiClient {
-    getFundHistory(symbol, fromDate, toDate) {
-        return this._getFundHistory(symbol, fromDate, toDate);
-    }
-
-    _getFundHistory(symbol, fromDate, toDate) {
+    getFundHistoryResult(symbol, fromDate, toDate) {
         let from = fromDate.toISOString();
         let fromAPIDate = this._encodeAPIDate(fromDate);
         let to = toDate.toISOString();

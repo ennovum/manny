@@ -3,6 +3,10 @@ let routing = {
         "/moneypl/history": {
             "handler": "moneyplHandler",
             "method": "history"
+        },
+        "/refinance/verdict": {
+            "handler": "refinanceHandler",
+            "method": "verdict"
         }
     }
 };

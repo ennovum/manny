@@ -8,6 +8,7 @@ import config from "./../config/config.js";
 import routing from "./routing.js";
 
 import "./../components/moneypl/moneypl.js";
+import "./../components/refinance/refinance.js";
 
 es6Promise.polyfill();
 

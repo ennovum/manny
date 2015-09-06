@@ -4,7 +4,7 @@ let config = {
         "port": "8080",
         "baseUrl": "/api"
     },
-    "moneypl": {
+    "refinance": {
         "symbols": [
             "TFI2641", // Arka BZ WBK Akcji Środkowej i Wschodniej Europy Fundusz Inwestycyjny Zamknięty
             "TFI38",   // Legg Mason Parasol Fundusz Inwestycyjny Otwarty Subfundusz Akcji
