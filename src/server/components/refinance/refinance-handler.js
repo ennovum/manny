@@ -12,9 +12,9 @@ class RefinanceHandler {
     verdict(req, res) {
         let symbols = config.refinance.symbols;
 
-        let nowDate = new Date();
-        let fromDate = new Date(nowDate.getFullYear(), nowDate.getMonth() - 1, nowDate.getDate(), 0, 0, 0, 0);
-        let toDate = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+        let date = req.query.date ? new Date(req.query.date) : new Date();
+        let fromDate = new Date(date.getFullYear(), date.getMonth() - 1, date.getDate(), 0, 0, 0, 0);
+        let toDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
 
         Promise.all(_.map(symbols, (symbol) => this._client.getFundHistoryResult(symbol, fromDate, toDate)))
             .then((fundHistoryResults) => this._analizer.getVerdictResult(fundHistoryResults))
