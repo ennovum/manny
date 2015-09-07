@@ -50,7 +50,7 @@ class MoneyplApiClient {
             .map((line) => ({
                 date: (new Date(line[0])).toISOString(),
                 value: parseFloat(line[1].replace(",", ".")),
-                shift: parseFloat(line[2].replace(",", "."))
+                ratio: parseFloat(line[2].replace(",", "."))
             }))
             .sortBy((line) => line.date)
             .value();
