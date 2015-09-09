@@ -78,7 +78,7 @@ class RefinanceAnalizer {
     }
 
     _evalValuesRatio(value, relativeValue) {
-        return _.round((value - relativeValue) / relativeValue, 2);
+        return _.round((value - relativeValue) / relativeValue, 4);
     }
 }
 

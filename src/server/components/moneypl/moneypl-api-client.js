@@ -49,8 +49,8 @@ class MoneyplApiClient {
             .map((line) => JSON.parse("[" + line + "]"))
             .map((line) => ({
                 date: (new Date(line[0])).toISOString(),
-                value: parseFloat(line[1].replace(",", ".")),
-                ratio: parseFloat(line[2].replace(",", "."))
+                value: _.round(parseFloat(line[1].replace(",", ".")), 2),
+                ratio: _.round(parseFloat(line[2].replace(",", ".")) / 100, 4)
             }))
             .sortBy((line) => line.date)
             .value();
