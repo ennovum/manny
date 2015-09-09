@@ -7,6 +7,7 @@ var gulpconfig = {
     "dir": {
         "src": "/src",
         "dev": "/dev",
+        "test": "/test",
         "dist": "/dist",
         "client": "/client",
         "server": "/server",
@@ -49,6 +50,7 @@ var gulpconfig = {
             }
         },
         "externals": {
+            "chai": "commonjs chai",
             "es6Promise": "commonjs es6-promise",
             "express": "commonjs express",
             "request": "commonjs request",
@@ -61,7 +63,8 @@ var gulpconfig = {
             "__dirname": true
         }
     },
-    "eslint": {}
+    "eslint": {},
+    "mocha": {}
 };
 
 module.exports = gulpconfig;
