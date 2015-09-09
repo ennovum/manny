@@ -3,7 +3,7 @@ var _ = require("lodash");
 var named = require("vinyl-named");
 var webpack = require("gulp-webpack");
 
-var conf = _.get(require("./../../gulpconfig.js"), 'webpack', {});
+var conf = _.get(require("./../../gulpconfig.js"), "webpack", {});
 
 function webpackJob(src, dest, opts) {
     opts = _.extend(_.extend({}, conf), opts);

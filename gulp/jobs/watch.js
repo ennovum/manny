@@ -1,7 +1,7 @@
-var gulp = require('gulp');
+var gulp = require("gulp");
 
 function watchTask(src, params) {
-    var types = params && params.types || ['added', 'changed', 'deleted'];
+    var types = params && params.types || ["added", "changed", "deleted"];
     var tasks = params && params.tasks || null;
     var start = params && params.start || false;
     var fn = params && params.fn || null;
