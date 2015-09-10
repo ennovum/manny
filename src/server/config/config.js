@@ -6,7 +6,7 @@ let config = {
     },
     "refinance": {
         "symbols": [
-            "TFI2641", // Arka BZ WBK Akcji Środkowej i Wschodniej Europy Fundusz Inwestycyjny Zamknięty
+            "TFI1",    // Arka BZ WBK Fundusz Inwestycyjny Otwarty subfundusz Arka Akcji Polskich
             "TFI38",   // Legg Mason Parasol Fundusz Inwestycyjny Otwarty Subfundusz Akcji
             "TFI1614", // QUERCUS Parasolowy Specjalistyczny Fundusz Inwestycyjny Otwarty - Subfundusz QUERCUS Agresywny
             "TFI70",   // Skarbiec Fundusz Inwestycyjny Otwarty Subfundusz Akcji Skarbiec Akcja
