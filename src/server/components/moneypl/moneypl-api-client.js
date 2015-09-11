@@ -2,7 +2,7 @@ import _ from "lodash";
 import request from "request";
 
 const API_FUND_HISTORY_URL = "http://www.money.pl/fundusze/archiwum/fundusze/";
-const API_FUND_HISTORY_PERIOD_DAYS_LIMIT = 50;
+const API_FUND_HISTORY_CHUNK_LIMIT = 50;
 
 class MoneyplApiClient {
     getFundHistoryResult(symbol, fromDate, toDate) {
@@ -15,34 +15,34 @@ class MoneyplApiClient {
     }
 
     _requestFundHistory(symbol, fromDate, toDate) {
-        let partPeriods = this._evalFundHistoryPartPeriods(fromDate, toDate);
+        let chunkSpans = this._evalFundHistoryChunkSpans(fromDate, toDate);
 
-        return Promise.all(_.map(partPeriods, (partPeriod) => this._requestFundHistoryPart(symbol, partPeriod.fromDate, partPeriod.toDate)))
-            .then((parts) => ({
-                symbol: parts[0].symbol,
-                records: _.reduce(parts, (data, part) => data.concat(part.records), [])
+        return Promise.all(_.map(chunkSpans, (chunkSpan) => this._requestFundHistoryChunk(symbol, chunkSpan.fromDate, chunkSpan.toDate)))
+            .then((chunks) => ({
+                symbol: chunks[0].symbol,
+                records: _.reduce(chunks, (data, chunk) => data.concat(chunk.records), [])
             }));
     }
 
-    _evalFundHistoryPartPeriods(fromDate, toDate) {
-        let partPeriods = [];
+    _evalFundHistoryChunkSpans(fromDate, toDate) {
+        let chunkSpans = [];
         let periodDate;
         let limitDate;
 
         while (!limitDate || limitDate < toDate) {
             periodDate = limitDate ? new Date(limitDate.getFullYear(), limitDate.getMonth(), limitDate.getDate() + 1) : fromDate;
-            limitDate = new Date(periodDate.getFullYear(), periodDate.getMonth(), periodDate.getDate() + API_FUND_HISTORY_PERIOD_DAYS_LIMIT);
+            limitDate = new Date(periodDate.getFullYear(), periodDate.getMonth(), periodDate.getDate() + API_FUND_HISTORY_CHUNK_LIMIT);
 
-            partPeriods.push({
+            chunkSpans.push({
                 fromDate: periodDate,
                 toDate: limitDate < toDate ? limitDate : toDate
             });
         }
 
-        return partPeriods;
+        return chunkSpans;
     }
 
-    _requestFundHistoryPart(symbol, fromDate, toDate) {
+    _requestFundHistoryChunk(symbol, fromDate, toDate) {
         return new Promise((resolve, reject) => {
             request.post({
                 url: API_FUND_HISTORY_URL,
