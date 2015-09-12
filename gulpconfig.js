@@ -55,6 +55,7 @@ var gulpconfig = {
             "express": "commonjs express",
             "request": "commonjs request",
             "lodash": "commonjs lodash",
+            "moment": "commonjs moment",
             "morgan": "commonjs morgan",
             "url": "commonjs url"
         },
