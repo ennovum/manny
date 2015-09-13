@@ -4,7 +4,7 @@ import request from "request";
 const API_FUND_HISTORY_URL = "http://www.money.pl/fundusze/archiwum/fundusze/";
 const API_FUND_HISTORY_CHUNK_LIMIT = 50;
 
-class MoneyplApiClient {
+export default class MoneyplApiClient {
     getFundHistoryResult(symbol, fromDate, toDate) {
         let from = fromDate.toISOString();
         let to = toDate.toISOString();
@@ -91,5 +91,3 @@ class MoneyplApiClient {
 
 MoneyplApiClient.factory = () => new MoneyplApiClient();
 MoneyplApiClient.factory.$inject = [];
-
-export default MoneyplApiClient;

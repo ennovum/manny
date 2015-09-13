@@ -13,7 +13,7 @@ const VERDICT_RISE = "RISE";
 const VERDICT_STILL = "STILL";
 const VERDICT_FALL = "FALL";
 
-class RefinanceAnalizer {
+export default class RefinanceAnalizer {
     getVerdictResult(historyResults, date) {
         let statsets = _.map(historyResults, (historyResult) => this._getRecordsStatset(historyResult.data.symbol, historyResult.data.records, date));
         let verdict = this._getStatsetsVerdict(statsets);
@@ -136,15 +136,13 @@ class RefinanceAnalizer {
 RefinanceAnalizer.factory = () => new RefinanceAnalizer();
 RefinanceAnalizer.factory.$inject = [];
 
-function filterRecordsSpan(records, endDate, duration) {
+export function filterRecordsSpan(records, endDate, duration) {
     let toMoment = moment(endDate);
     let fromMoment = moment(endDate).subtract(duration);
 
     return _.filter(records, (record) => fromMoment.diff(record.date) <= 0 && toMoment.diff(record.date) >= 0);
 }
 
-function evalRatio(value, relativeValue) {
+export function evalRatio(value, relativeValue) {
     return _.round((value - relativeValue) / relativeValue, 4);
 }
-
-export default RefinanceAnalizer;

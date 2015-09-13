@@ -3,7 +3,7 @@ import injector from "injector";
 
 import config from "./../../config/config.js";
 
-class RefinanceHandler {
+export default class RefinanceHandler {
     constructor() {
         this._client = injector.get("moneyplClient");
         this._analizer = injector.get("refinanceAnalizer");
@@ -28,5 +28,3 @@ class RefinanceHandler {
 
 RefinanceHandler.factory = () => new RefinanceHandler();
 RefinanceHandler.factory.$inject = [];
-
-export default RefinanceHandler;

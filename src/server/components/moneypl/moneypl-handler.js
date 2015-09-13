@@ -1,6 +1,6 @@
 import injector from "injector";
 
-class MoneyplHandler {
+export default class MoneyplHandler {
     constructor() {
         this._client = injector.get("moneyplClient");
     }
@@ -24,5 +24,3 @@ class MoneyplHandler {
 
 MoneyplHandler.factory = () => new MoneyplHandler();
 MoneyplHandler.factory.$inject = [];
-
-export default MoneyplHandler;
