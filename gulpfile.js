@@ -65,6 +65,6 @@ gulp.task("test:dev", jobs.run(/*["client-test:dev"], */["server-test:dev"]));
 gulp.task("build", jobs.run(["client:build", "server:build"]));
 gulp.task("server", jobs.run(["server:start"]));
 gulp.task("start", jobs.run(["client:build", "server:build"], "server:start"));
-gulp.task("dev", jobs.run(["client:build", "server:build"], "server:start", ["client:watch", "server:watch"]));
+gulp.task("dev", jobs.run(["client:watch", "server:watch"], "server:start"));
 gulp.task("lint", jobs.run(["client:lint"], ["server:lint"]));
 gulp.task("test", jobs.run(["lint"], ["test:build"], ["test:start"]/*, ["test:watch"]*/));

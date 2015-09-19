@@ -53,6 +53,7 @@ var gulpconfig = {
             "chai": "commonjs chai",
             "es6Promise": "commonjs es6-promise",
             "express": "commonjs express",
+            "path": "commonjs path",
             "request": "commonjs request",
             "lodash": "commonjs lodash",
             "moment": "commonjs moment",
