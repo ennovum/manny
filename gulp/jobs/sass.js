@@ -17,7 +17,7 @@ function sassJob(src, dest, opts) {
         gutil.log(opts.logTag, gutil.colors.red(err.message + " on line " + err.line + " in " + err.file));
     }
 
-    return function sassTask() {
+    return function () {
         return gulp.src(src)
             .pipe(sass(opts))
             .pipe(autoprefixer({

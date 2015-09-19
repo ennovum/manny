@@ -40,6 +40,8 @@ gulp.task("client:lint", jobs.run(["client.scripts:lint"]));
 
 gulp.task("client-test.scripts", jobs.webpack(src + client + "/**/*.test.js", test + client + "/", {target: "web"}));
 gulp.task("client-test.scripts:watch", jobs.watch(src + client + "/**/*.test.js", {tasks: ["client-test.scripts"]}));
+gulp.task("client-test:start", jobs.mocha(test + client + "/**/*.js"));
+gulp.task("client-test.dev", jobs.watch(src + client + "/**/*.test.js", {tasks: ["client-test:start"]}));
 
 gulp.task("server.scripts", jobs.nodepack(src + server + "/*.js", dev + server + "/", {target: "node"}));
 gulp.task("server.scripts:watch", jobs.nodepack(src + server + "/*.js", dev + server + "/", {target: "node", watch: true}));
@@ -47,6 +49,8 @@ gulp.task("server.scripts:lint", jobs.eslint(src + server + "/**/*.js"));
 
 gulp.task("server-test.scripts", jobs.nodepack(src + server + "/**/*.test.js", test + server + "/", {target: "node"}));
 gulp.task("server-test.scripts:watch", jobs.watch(src + server + "/**/*.test.js", {tasks: ["server-test.scripts"]}));
+gulp.task("server-test:start", jobs.mocha(test + server + "/**/*.js"));
+gulp.task("server-test.dev", jobs.watch(src + server + "/**/*.test.js", {tasks: ["server-test:start"]}));
 
 gulp.task("server:build", jobs.run(["server.scripts"]));
 gulp.task("server:watch", jobs.run(["server.scripts:watch"]));
@@ -55,7 +59,8 @@ gulp.task("server:start", jobs.exec("node", [dev + server + "/index.js"]));
 
 gulp.task("test:build", jobs.run([/*"client-test.scripts", */"server-test.scripts"]));
 gulp.task("test:watch", jobs.run([/*"client-test.scripts:watch", */"server-test.scripts:watch"]));
-gulp.task("test:start", jobs.mocha(test + "/**/*.js"));
+gulp.task("test:start", jobs.run(/*["client-test:start"], */["server-test:start"]));
+gulp.task("test:dev", jobs.run(/*["client-test:dev"], */["server-test:dev"]));
 
 gulp.task("build", jobs.run(["client:build", "server:build"]));
 gulp.task("server", jobs.run(["server:start"]));
