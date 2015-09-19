@@ -22,6 +22,7 @@
     "gulp-util": "^3.0.6",
     "gulp-webpack": "^1.5.0",
     "lodash": "^3.6.0",
+    "map-stream": "0.0.6",
     "moment": "^2.10.6",
     "morgan": "^1.5.2",
     "normalize.css": "^3.0.3",
