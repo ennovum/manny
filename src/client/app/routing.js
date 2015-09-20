@@ -1,6 +1,9 @@
 let routing = {
-    "defaultPath": "/costimizer",
+    "defaultPath": "/verdict",
     "routes": {
+        "/verdict": {
+            "template": "<verdict />"
+        }
     }
 };
 

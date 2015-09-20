@@ -5,10 +5,13 @@ import "angularRoute";
 
 import routing from "./routing.js";
 
+import "./../components/refinance/refinance.js";
+import "./../components/verdict/verdict.js";
+
 es6Promise.polyfill();
 
 angular
-    .module("app", ["ngRoute", "allegro", "costimizer"])
+    .module("app", ["ngRoute", "refinance", "verdict"])
     .config(["$routeProvider", ($routeProvider) => {
         _.forEach(routing.routes, (route, path) => $routeProvider.when(path, route));
 
@@ -17,10 +20,8 @@ angular
         });
     }]);
 
-class App {
+export default class App {
     run() {
         angular.bootstrap(document, ["app"]);
     }
 }
-
-export default App;
