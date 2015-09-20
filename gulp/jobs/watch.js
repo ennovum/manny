@@ -5,7 +5,7 @@ var _ = require("lodash");
 function watchTask(src, params) {
     var types = params && params.types || ["added", "changed", "deleted"];
     var tasks = params && params.tasks || null;
-    var start = params && params.start || false;
+    var start = params && params.start || true;
 
     return function () {
         var watcher = gulp.watch(src, {errLogToConsole: true}, function (event) {
