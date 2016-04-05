@@ -276,6 +276,7 @@ describe("filterRecordsSpan", () => {
         expect(filteredRecords).to.deep.equal(sample2.filteredRecords);
     });
 });
+
 describe("evalRatio", () => {
     let sample1 = {
         value: 100,
