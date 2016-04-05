@@ -52,7 +52,6 @@ describe("RefinanceAnalizer", () => {
     };
 
     sample1.seasonKeyRecords = {
-        oldest: sample1.records[2],
         newest: sample1.records[9],
         lowest: sample1.records[3],
         highest: sample1.records[5]
@@ -64,7 +63,6 @@ describe("RefinanceAnalizer", () => {
     };
 
     sample1.seasonKeyValues = {
-        oldest: sample1.records[2].value, // 100
         newest: sample1.records[9].value, // 100
         lowest: sample1.records[3].value, // 95
         highest: sample1.records[5].value // 105

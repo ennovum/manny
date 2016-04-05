@@ -13,7 +13,7 @@ export default class MoneyplHandler {
         let fromDate = new Date(from);
         let toDate = new Date(to);
 
-        this._client.getFundHistory(symbol, fromDate, toDate)
+        this._client.getFundHistoryResult(symbol, fromDate, toDate)
             .then((historyResult) => {
                 res.send(historyResult);
             }, (err) => {

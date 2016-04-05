@@ -1,8 +1,8 @@
 import _ from "lodash";
 import moment from "moment";
 
-const RECENT_DURTION = moment.duration({months: 1});
-const SEASON_DURTION = moment.duration({years: 1});
+const RECENT_DURATION = moment.duration({months: 1});
+const SEASON_DURATION = moment.duration({months: 12});
 
 const RECENT_RISE_ALERT_RATIO = 0.1;
 const RECENT_FALL_ALERT_RATIO = -0.1;
@@ -35,11 +35,11 @@ export default class RefinanceAnalizer {
     }
 
     _filterRecentRecords(records, date) {
-        return filterRecordsSpan(records, date, RECENT_DURTION);
+        return filterRecordsSpan(records, date, RECENT_DURATION);
     }
 
     _filterSeasonRecords(records, date) {
-        return filterRecordsSpan(records, date, SEASON_DURTION);
+        return filterRecordsSpan(records, date, SEASON_DURATION);
     }
 
     _getRecentRecordsStat(records) {
@@ -61,71 +61,74 @@ export default class RefinanceAnalizer {
     }
 
     _evalRecentKeyRecords(records) {
-        return {
-            oldest: _.min(records, (record) => new Date(record.date)),
-            newest: _.max(records, (record) => new Date(record.date))
-        };
+        let oldest = _.min(records, (record) => new Date(record.date));
+        let newest = _.max(records, (record) => new Date(record.date));
+
+        return {oldest, newest};
     }
 
     _evalSeasonKeyRecords(records) {
-        return {
-            oldest: _.min(records, (record) => new Date(record.date)),
-            newest: _.max(records, (record) => new Date(record.date)),
-            lowest: _.min(records, (record) => record.value),
-            highest: _.max(records, (record) => record.value)
-        };
+        let newest = _.max(records, (record) => new Date(record.date));
+        let lowest = _.min(records, (record) => record.value);
+        let highest = _.max(records, (record) => record.value);
+
+        return {newest, lowest, highest};
     }
 
     _evalRecentKeyValues(keyRecords) {
-        return {
-            oldest: keyRecords.oldest.value,
-            newest: keyRecords.newest.value
-        };
+        let oldest = keyRecords.oldest.value;
+        let newest = keyRecords.newest.value;
+
+        return {oldest, newest};
     }
 
     _evalSeasonKeyValues(keyRecords) {
-        return {
-            oldest: keyRecords.oldest.value,
-            newest: keyRecords.newest.value,
-            lowest: keyRecords.lowest.value,
-            highest: keyRecords.highest.value
-        };
+        let newest = keyRecords.newest.value;
+        let lowest = keyRecords.lowest.value;
+        let highest = keyRecords.highest.value;
+
+        return {newest, lowest, highest};
     }
 
     _evalRecentRatios(keyValues) {
-        return {
-            global: evalRatio(keyValues.newest, keyValues.oldest)
-        };
+        let global = evalRatio(keyValues.newest, keyValues.oldest);
+
+        return {global};
     }
 
     _evalSeasonRatios(keyValues) {
-        return {
-            peakRise: evalRatio(keyValues.newest, keyValues.lowest),
-            peakFall: evalRatio(keyValues.newest, keyValues.highest)
-        };
+        let peakRise = evalRatio(keyValues.newest, keyValues.lowest);
+        let peakFall = evalRatio(keyValues.newest, keyValues.highest);
+
+        return {peakRise, peakFall};
     }
 
     _evalRecentAlerts(ratios) {
-        return {
-            globalRise: ratios.global > RECENT_RISE_ALERT_RATIO,
-            globalFall: ratios.global < RECENT_FALL_ALERT_RATIO
-        };
+        let globalRise = ratios.global > RECENT_RISE_ALERT_RATIO;
+        let globalFall = ratios.global < RECENT_FALL_ALERT_RATIO;
+
+        return {globalRise, globalFall};
     }
 
     _evalSeasonAlerts(ratios) {
-        return {
-            peakRise: ratios.peakRise > SEASON_RISE_ALERT_RATIO,
-            peakFall: ratios.peakFall < SEASON_FALL_ALERT_RATIO
-        };
+        let peakRise = ratios.peakRise > SEASON_RISE_ALERT_RATIO;
+        let peakFall = ratios.peakFall < SEASON_FALL_ALERT_RATIO;
+
+        return {peakRise, peakFall};
     }
 
     _getStatsetsVerdict(statsets) {
         let verdict = VERDICT_STILL;
 
-        if (_.any(statsets, (statset) => statset.recent.alerts.globalRise) || _.any(statsets, (statset) => statset.season.alerts.peakRise)) {
+        let anyGlobalRise = _.any(statsets, (statset) => statset.recent.alerts.globalRise);
+        let anyGlobalFall = _.any(statsets, (statset) => statset.recent.alerts.globalFall);
+        let anyPeakRise = _.any(statsets, (statset) => statset.season.alerts.peakRise);
+        let anyPeakFall = _.any(statsets, (statset) => statset.season.alerts.peakFall);
+
+        if (anyGlobalRise || anyPeakRise) {
             verdict = VERDICT_RISE;
         }
-        if (_.any(statsets, (statset) => statset.recent.alerts.globalFall) || _.any(statsets, (statset) => statset.season.alerts.peakFall)) {
+        if (anyGlobalFall || anyPeakFall) {
             verdict = VERDICT_FALL;
         }
 
