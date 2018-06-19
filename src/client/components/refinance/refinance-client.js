@@ -5,12 +5,13 @@ class RefinanceClient {
         this._$http = $http;
     }
 
-    getVerdict(date) {
+    getVerdict(endDate, seasonDate) {
         return this._$http.get(
             config.api.baseUrl + config.api.resources.refinance.verdict,
             {
-                "params": {
-                    "date": date.toISOString()
+                params: {
+                    "end-date": endDate.toISOString(),
+                    "season-date": seasonDate.toISOString()
                 }
             })
             .then((response) => response.data);

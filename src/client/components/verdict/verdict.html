@@ -1,5 +1,10 @@
 <div class="verdict">
-    <div class="" ng-if="ctrl.verdict">
+    <div class="form">
+    	<input ng-model="ctrl.model.endDate" />
+    	<input ng-model="ctrl.model.seasonDate" />
+    	<button ng-click="ctrl.getVerdict()">OK</button>
+    </div>
+    <div class="result" ng-if="ctrl.verdict">
         <span>{{ctrl.verdict.verdict}}</span>
     </div>
 </div>
