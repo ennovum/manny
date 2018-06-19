@@ -44,16 +44,19 @@ export default class MoneyplApiClient {
 
     _requestFundHistoryChunk(symbol, fromDate, toDate) {
         return new Promise((resolve, reject) => {
-            request.post({
-                url: API_FUND_HISTORY_URL,
-                form: {
-                    "symbol": symbol,
-                    "od": this._encodeAPIDate(fromDate),
-                    "do": this._encodeAPIDate(toDate),
-                    "period": 0,
-                    "format": "csv"
-                }
-            }, (err, response, data) => {
+            const url = API_FUND_HISTORY_URL;
+            const form = {
+                "symbol": symbol,
+                "od": this._encodeAPIDate(fromDate),
+                "do": this._encodeAPIDate(toDate),
+                "format": "csv"
+            };
+            const options = {
+                url, form,
+                followRedirect: true,
+                followAllRedirects: true
+            };
+            request.post(options, (err, response, data) => {
                 if (err) {
                     return reject(err);
                 }
