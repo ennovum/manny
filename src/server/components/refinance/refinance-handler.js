@@ -1,7 +1,10 @@
 import _ from "lodash";
+import moment from "moment";
 import injector from "injector";
 
 import config from "./../../config/config.js";
+
+const RECENT_DURATION = moment.duration({months: 1});
 
 export default class RefinanceHandler {
     constructor() {
@@ -12,12 +15,18 @@ export default class RefinanceHandler {
     verdict(req, res) {
         let symbols = config.refinance.symbols;
 
-        let date = req.query.date ? new Date(req.query.date) : new Date();
-        let fromDate = new Date(date.getFullYear() - 1, date.getMonth(), date.getDate(), 0, 0, 0, 0);
-        let toDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
+        let endMoment = moment(req.query["end-date"]).set({hour: 0, minute: 0, second: 0, millisecond: 0});
+        let recentMoment = moment(endMoment).subtract(RECENT_DURATION);
+        let seasonMoment = moment(req.query["season-date"]).set({hour: 0, minute: 0, second: 0, millisecond: 0});
+        let startMoment = moment.min(seasonMoment, recentMoment);
 
-        Promise.all(_.map(symbols, (symbol) => this._client.getFundHistoryResult(symbol, fromDate, toDate)))
-            .then((fundHistoryResults) => this._analizer.getVerdictResult(fundHistoryResults, date))
+        let endDate = endMoment.toDate();
+        let recentDate = recentMoment.toDate();
+        let seasonDate = seasonMoment.toDate();
+        let startDate = startMoment.toDate();
+
+        Promise.all(_.map(symbols, (symbol) => this._client.getFundHistoryResult(symbol, startDate, endDate)))
+            .then((fundHistoryResults) => this._analizer.getVerdictResult(fundHistoryResults, endDate, recentDate, seasonDate))
             .then((verdictResult) => {
                 res.send(verdictResult);
             }, (err) => {

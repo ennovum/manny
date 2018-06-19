@@ -1,9 +1,6 @@
 import _ from "lodash";
 import moment from "moment";
 
-const RECENT_DURATION = moment.duration({months: 1});
-const SEASON_DURATION = moment.duration({months: 12});
-
 const RECENT_RISE_ALERT_RATIO = 0.1;
 const RECENT_FALL_ALERT_RATIO = -0.1;
 const SEASON_RISE_ALERT_RATIO = 0.15;
@@ -14,19 +11,19 @@ const VERDICT_STILL = "STILL";
 const VERDICT_FALL = "FALL";
 
 export default class RefinanceAnalizer {
-    getVerdictResult(historyResults, date) {
-        let statsets = _.map(historyResults, (historyResult) => this._getRecordsStatset(historyResult.data.symbol, historyResult.data.records, date));
+    getVerdictResult(historyResults, endDate, recentDate, seasonDate) {
+        let statsets = _.map(historyResults, (historyResult) => this._getRecordsStatset(historyResult.data.symbol, historyResult.data.records, endDate, recentDate, seasonDate));
         let verdict = this._getStatsetsVerdict(statsets);
 
-        let meta = {date: date.toISOString()};
+        let meta = {endDate: endDate.toISOString(), recentDate: recentDate.toISOString(), seasonDate: seasonDate.toISOString()};
         let data = {statsets, verdict};
 
         return {meta, data};
     }
 
-    _getRecordsStatset(symbol, records, date) {
-        let recentRecords = this._filterRecentRecords(records, date);
-        let seasonRecords = this._filterSeasonRecords(records, date);
+    _getRecordsStatset(symbol, records, endDate, recentDate, seasonDate) {
+        let recentRecords = this._filterRecentRecords(records, endDate, recentDate);
+        let seasonRecords = this._filterSeasonRecords(records, endDate, seasonDate);
 
         let recent = this._getRecentRecordsStat(recentRecords);
         let season = this._getSeasonRecordsStat(seasonRecords);
@@ -34,12 +31,16 @@ export default class RefinanceAnalizer {
         return {symbol, recent, season};
     }
 
-    _filterRecentRecords(records, date) {
-        return filterRecordsSpan(records, date, RECENT_DURATION);
+    _filterRecentRecords(records, endDate, recentDate) {
+        let endMoment = moment(endDate);
+        let recentMoment = moment(recentDate);
+        return _.filter(records, (record) => !endMoment.isBefore(record.date) && !recentMoment.isAfter(record.date));
     }
 
-    _filterSeasonRecords(records, date) {
-        return filterRecordsSpan(records, date, SEASON_DURATION);
+    _filterSeasonRecords(records, endDate, seasonDate) {
+        let endMoment = moment(endDate);
+        let seasonMoment = moment(seasonDate);
+        return _.filter(records, (record) => !endMoment.isBefore(record.date) && !seasonMoment.isAfter(record.date));
     }
 
     _getRecentRecordsStat(records) {
@@ -138,13 +139,6 @@ export default class RefinanceAnalizer {
 
 RefinanceAnalizer.factory = () => new RefinanceAnalizer();
 RefinanceAnalizer.factory.$inject = [];
-
-export function filterRecordsSpan(records, endDate, duration) {
-    let toMoment = moment(endDate);
-    let fromMoment = moment(endDate).subtract(duration);
-
-    return _.filter(records, (record) => fromMoment.diff(record.date) <= 0 && toMoment.diff(record.date) >= 0);
-}
 
 export function evalRatio(value, relativeValue) {
     return _.round((value - relativeValue) / relativeValue, 4);

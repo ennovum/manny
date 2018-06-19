@@ -6,7 +6,9 @@ class RefinanceClient {
     }
 
     getVerdict(date) {
-        return this._$http.get(config.api.baseUrl + config.api.resources.refinance.verdict, {
+        return this._$http.get(
+            config.api.baseUrl + config.api.resources.refinance.verdict,
+            {
                 "params": {
                     "date": date.toISOString()
                 }

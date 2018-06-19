@@ -1,10 +1,9 @@
 /*global describe, it*/
 
-import moment from "moment";
 import chai from "chai";
 
 import RefinanceAnalizer from "./refinance-analizer.js";
-import {filterRecordsSpan, evalRatio} from "./refinance-analizer.js";
+import {evalRatio} from "./refinance-analizer.js";
 
 let expect = chai.expect;
 
@@ -25,7 +24,9 @@ describe("RefinanceAnalizer", () => {
             {date: new Date("2015-08-21"), value: 99},
             {date: new Date("2015-09-01"), value: 100}
         ],
-        date: new Date("2015-09-01")
+        endDate: new Date("2015-09-01"),
+        recentDate: new Date("2015-08-01"),
+        seasonDate: new Date("2014-09-01")
     };
 
     sample1.recentRecords = [
@@ -151,17 +152,17 @@ describe("RefinanceAnalizer", () => {
     sample2.verdict = "FALL";
 
     it("should get statset", () => {
-        let statset = analizer._getRecordsStatset(sample1.symbol, sample1.records, sample1.date);
+        let statset = analizer._getRecordsStatset(sample1.symbol, sample1.records, sample1.endDate, sample1.recentDate, sample1.seasonDate);
         expect(statset).to.deep.equal(sample1.statset);
     });
 
     it("should filter recent records", () => {
-        let recentRecords = analizer._filterRecentRecords(sample1.records, sample1.date);
+        let recentRecords = analizer._filterRecentRecords(sample1.records, sample1.endDate, sample1.recentDate);
         expect(recentRecords).to.deep.equal(sample1.recentRecords);
     });
 
     it("should filter season records", () => {
-        let seasonRecords = analizer._filterSeasonRecords(sample1.records, sample1.date);
+        let seasonRecords = analizer._filterSeasonRecords(sample1.records, sample1.endDate, sample1.seasonDate);
         expect(seasonRecords).to.deep.equal(sample1.seasonRecords);
     });
 
@@ -223,55 +224,6 @@ describe("RefinanceAnalizer", () => {
 
         verdict = analizer._getStatsetsVerdict(sample2.statsets);
         expect(verdict).to.deep.equal(sample2.verdict);
-    });
-});
-
-describe("filterRecordsSpan", () => {
-    let sample1 = {
-        records: [
-            {date: new Date("2013-01-01"), value: 0},
-            {date: new Date("2014-01-01"), value: 200},
-            {date: new Date("2015-01-01"), value: 100},
-            {date: new Date("2015-03-01"), value: 95},
-            {date: new Date("2015-05-01"), value: 100},
-            {date: new Date("2015-07-01"), value: 105},
-            {date: new Date("2015-08-01"), value: 100},
-            {date: new Date("2015-08-11"), value: 101},
-            {date: new Date("2015-08-21"), value: 99},
-            {date: new Date("2015-09-01"), value: 100}
-        ],
-        endDate: new Date("2015-09-01"),
-        duration: moment.duration({months: 1})
-    };
-
-    sample1.filteredRecords = [
-        sample1.records[6],
-        sample1.records[7],
-        sample1.records[8],
-        sample1.records[9]
-    ];
-
-    let sample2 = {
-        records: sample1.records,
-        endDate: new Date("2015-07-01"),
-        duration: moment.duration({years: 1})
-    };
-
-    sample2.filteredRecords = [
-        sample1.records[2],
-        sample1.records[3],
-        sample1.records[4],
-        sample1.records[5]
-    ];
-
-    it("should filter records span", () => {
-        let filteredRecords;
-
-        filteredRecords = filterRecordsSpan(sample1.records, sample1.endDate, sample1.duration);
-        expect(filteredRecords).to.deep.equal(sample1.filteredRecords);
-
-        filteredRecords = filterRecordsSpan(sample2.records, sample2.endDate, sample2.duration);
-        expect(filteredRecords).to.deep.equal(sample2.filteredRecords);
     });
 });
 
